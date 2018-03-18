@@ -24,22 +24,30 @@
 ;; where l and w are numbers.
 
 (define-struct bus (size capacity driver))
+;; A bus is a structure:
+;;         (make-bus s c d)
+;; where s is size structure and c is a numbers and d is a symbol.
+
 (define-struct limo (size capacity))
+;; A limo is a structure:
+;;         (make-limo s c)
+;; where s is a size structure and c is a number.
+
 (define-struct car (color capacity))
+;; A car is a structure:
+;;         (make-car co c)
+;; where co is a symbol and c is a number.
+
 (define-struct subway (size capacity driver))
+;; A subway is a structure:
+;;         (make-subway s c d)
+;; where s is size structure and c is a numbers and d is a symbol.
+
 ;; A vehicle is either:
-;; 1. a bus structure:
-;;             (make-bus s c d)
-;;    where s is size structure and c is a numbers and d is a symbol.
-;; 2. a limo structure:
-;;             (make-limo s c)
-;;    where s is a size structure and c is a number.
-;; 3. a car structure:
-;;             (make-car co c)
-;;    where co is a symbol and c is a number.
-;; 1. a subway structure:
-;;             (make-subway s c d)
-;;    where s is size structure and c is a numbers and d is a symbol.
+;; 1. a bus, or
+;; 2. a limo, or
+;; 3. a car, or
+;; 4. a subway.
 
 ;; Template
 ;; (define (fun-for-vehicle a-vehicle)
