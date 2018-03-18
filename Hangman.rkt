@@ -58,7 +58,9 @@
 ;; representing three-letter words.
 
 (define-struct word (a b c))
-;; a word is a structure where a, b and c are symbols representing letters.
+;; a word is a structure:
+;                    (make-word a b c)
+;; where a, b and c are symbols representing letters.
 
 ;; Problem 6.7.3: Develop a function reveal. It consumes three arguments:
 ;; 1. the chosen word, which is the word that we have to guess;
