@@ -53,13 +53,6 @@
                                                    (make-posn 160 195) 'black)]
     [(symbol=? a-part 'noose) (draw-circle (make-posn 150 60) 20 'black)]))
 
-;;(draw-next-part 'noose)
-;;(draw-next-part 'head)
-;;(draw-next-part 'body)
-;;(draw-next-part 'left-arm)
-;;(draw-next-part 'right-arm)
-;;(draw-next-part 'left-leg)
-;;(draw-next-part 'right-leg)
 
 ;; Problem 6.7.2: Provide a structure definition and a data definition for
 ;; representing three-letter words.
