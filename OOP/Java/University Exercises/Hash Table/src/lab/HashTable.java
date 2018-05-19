@@ -6,7 +6,6 @@ import frame.Entry;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.pow;
-import static java.lang.Math.round;
 
 /*
  * Implements a Hash-Table structure as introduced in the 
@@ -24,6 +23,10 @@ public class HashTable {
 	private int initialCapacity;
 	private String hashFunc;
 	private String colRes;
+	private int addressLength;
+	private int probeSequence;
+	private int filledSlots;
+	private double  loadFactor = filledSlots / initialCapacity;
 	/**
 	 * The constructor
 	 * 
@@ -44,6 +47,7 @@ public class HashTable {
 		this.initialCapacity = k;
 		this.hashFunc = hashFunction;
 		this.colRes = collisionResolution;
+		this.filledSlots = 0;
 		this.entriesArray = new Entry[k];
 
 		for(int i= 0; i < entriesArray.length; i++) {
@@ -56,7 +60,7 @@ public class HashTable {
 		int keyIntegerValue;
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < charA.length; i++) {
-			sb.append ((int)charA[i]);
+			sb.append((int)charA[i]);
 		}
 
 
@@ -68,7 +72,30 @@ public class HashTable {
 		}
 		if (hashFunc.equals("folding")) {
 			//do this
-			int h =
+			if (initialCapacity % 2 == 0) {
+				addressLength = 2;
+				String[] foldedStrings = new String[sb.length() / 2];
+				for(int i = 0; i < sb.length(); i++) {
+					if (i % 2 == 0 && i != 0) {
+						foldedStrings[i] = sb.reverse().toString().substring(i * 2, i * 2 + 2);
+					} else foldedStrings[i] = sb.toString().substring(i * 2, i * 2 + 2);
+				}
+				keyIntegerValue = Integer.parseInt(sb.toString());
+
+				int h =
+			} else if (initialCapacity % 3 == 0) {
+				addressLength = 3;
+				String[] foldedStrings = new String[sb.length() / 2];
+				for(int i = 0; i < sb.length(); i++) {
+					if (i % 2 == 0 && i != 0) {
+						foldedStrings[i] = sb.reverse().toString().substring(i * 3, i * 3 + 3);
+					} else foldedStrings[i] = sb.toString().substring(i * 3, i * 3 + 3);
+				}
+				keyIntegerValue = Integer.parseInt("00" + sb.toString());
+
+				int h =
+			}
+
 		}
 		if (hashFunc.equals("mid_square")) {
 			//do this
@@ -112,31 +139,35 @@ public class HashTable {
 	 *         if the entry already exists in the Hash-Table
 	 */
 	public boolean insert(Entry insertEntry) {
-		/**
-		 * Add your code here
-		 */
-		if(colRes.equals("linear_probing")) {
-			// DO this type of insertion
-			int i = 0;
-			do {
-				int j = hashFunction(insertEntry.getKey()) + i;
-				if (entriesArray[j].getKey() == null) {
-					entriesArray[j] = insertEntry;
-					return true;
-				} else i++;
-			} while(i < initialCapacity);
-		}
-		if(colRes.equals("quadratic_probing")) {
-			// DO this type of insertion
-			int i = 2;
-			do {
-				int j = (int) (hashFunction(insertEntry.getKey()) - ceil(pow((i / 2), 2)) * pow((-1), i)) % initialCapacity;
-				if(j < 0) j = j + initialCapacity;
-				if (entriesArray[j].getKey() == null) {
-					entriesArray[j] = insertEntry;
-					return true;
-				} else i++;
-			} while(i < initialCapacity);
+		
+		if (loadFactor >= 0.75) {
+			rehash();
+		} else {
+			if (colRes.equals("linear_probing")) {
+				// DO this type of insertion
+				int probeSequence = 0;
+				do {
+					int j = hashFunction(insertEntry.getKey()) ;
+					if (entriesArray[j + probeSequence].getKey() == null) {
+						entriesArray[j + probeSequence] = insertEntry;
+						filledSlots++;
+						return true;
+					} else probeSequence++;
+				} while (probeSequence < initialCapacity);
+			}
+			if (colRes.equals("quadratic_probing")) {
+				// DO this type of insertion
+				int probeSequence = 0;
+				do {
+					int j = (int) (hashFunction(insertEntry.getKey()) - ceil(pow((probeSequence / 2), 2)) * pow((-1), probeSequence)) % initialCapacity;
+					if (j < 0) j = j + initialCapacity;
+					if (entriesArray[j].getKey() == null) {
+						entriesArray[j] = insertEntry;
+						filledSlots++;
+						return true;
+					} else probeSequence++;
+				} while (probeSequence < initialCapacity);
+			}
 		}
 		return false;
 	}
@@ -152,32 +183,9 @@ public class HashTable {
 	 *         the entry is not found in the Hash-Table
 	 */
 	public Entry delete(String deleteKey) {
-		/**
-		 * which hash to use?
-		 */
-
-		if(hashFunc.equals("Division")) {
-			// DO this type of deletion
-			if (colRes.equals("Linear or Quadratic")) {
-				// DO this collision resolution technique
-			}
-		}
-		if(hashFunc.equals("folding")) {
-			// DO this type of deletion
-			if (colRes.equals("Linear or Quadratic")) {
-				// DO this collision resolution technique
-			}
-		}
-		if(hashFunc.equals("mid_square")) {
-			// DO this type of deletion
-			if (colRes.equals("Linear or Quadratic")) {
-				// DO this collision resolution technique
-			}
-		}
 		if(!entriesArray[hashFunction(deleteKey)].isDeleted()) {
 			entriesArray[hashFunction(deleteKey)].markDeleted();
 		}
-
 		return null;
 	}
 
@@ -192,13 +200,9 @@ public class HashTable {
 	 *         null if the entry is not found in the Hash-Table
 	 */
 	public Entry find(String searchKey) {
-		/**
-		 * Add your code here
-		 */
-
 		int i = 0;
 		do {
-			int j = hashFunction(searchKey, i);
+			int j = hashFunction(searchKey) + probeSequence;
 			if(entriesArray[j].getKey().compareTo(searchKey) == 0) {
 				return entriesArray[j];
 			}
@@ -237,5 +241,9 @@ public class HashTable {
 		/**
 		 * Add your code here
 		 */
+		// delete entries marked with deleted
+		// multiply capacity by 10 and search for the closest prime under the number
+		// reinsert entries
+
 	}
 }
