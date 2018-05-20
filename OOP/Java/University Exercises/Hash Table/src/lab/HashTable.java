@@ -75,8 +75,8 @@ public class HashTable {
 		if (hashFunc.equals("folding")) {
 			//do this
 			if (initialCapacity % 2 == 0) {
-				//int addressLength = 2;
-				String[] foldedStrings = new String[sb.length() / 2];
+				int addressLength = 2;
+				String[] foldedStrings = new String[sb.length() / addressLength];
 				for(int i = 0; i < sb.length(); i++) {
 					if (i % 2 == 0 && i != 0) {
 						foldedStrings[i] = sb.reverse().toString().substring(i * 2, i * 2 + 2);
