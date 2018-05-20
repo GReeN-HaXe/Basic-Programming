@@ -2,6 +2,8 @@ package lab;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import frame.Entry;
 
 import static java.lang.Math.ceil;
@@ -23,10 +25,8 @@ public class HashTable {
 	private int initialCapacity;
 	private String hashFunc;
 	private String colRes;
-	private int addressLength;
-	private int probeSequence;
 	private int filledSlots;
-	private double  loadFactor = filledSlots / initialCapacity;
+	private double loadFactor;
 	/**
 	 * The constructor
 	 * 
@@ -49,31 +49,33 @@ public class HashTable {
 		this.colRes = collisionResolution;
 		this.filledSlots = 0;
 		this.entriesArray = new Entry[k];
+		this.loadFactor = this.filledSlots / this.initialCapacity;
 
+		//entriesArray is filled with nulls
 		for(int i= 0; i < entriesArray.length; i++) {
 			entriesArray[i] = null;
 		}
 	}
 
 	public int hashFunction(String key) {
+		int keyIntegerValue = 0;
 		char[] charA = key.toCharArray();
-		int keyIntegerValue;
 		StringBuilder sb = new StringBuilder();
+
 		for (int i = 0; i < charA.length; i++) {
 			sb.append((int)charA[i]);
 		}
 
-
 		if (hashFunc.equals("division")) {
 			//do this
 			keyIntegerValue = Integer.parseInt(sb.toString().substring(0 , 4));
-			int h = Math.abs(keyIntegerValue % initialCapacity);
-			return h;
+			int hashValue = Math.abs(keyIntegerValue % initialCapacity);
+			return hashValue;
 		}
 		if (hashFunc.equals("folding")) {
 			//do this
 			if (initialCapacity % 2 == 0) {
-				addressLength = 2;
+				//int addressLength = 2;
 				String[] foldedStrings = new String[sb.length() / 2];
 				for(int i = 0; i < sb.length(); i++) {
 					if (i % 2 == 0 && i != 0) {
@@ -82,9 +84,9 @@ public class HashTable {
 				}
 				keyIntegerValue = Integer.parseInt(sb.toString());
 
-				int h =
+				//int h =
 			} else if (initialCapacity % 3 == 0) {
-				addressLength = 3;
+				//int addressLength = 3;
 				String[] foldedStrings = new String[sb.length() / 2];
 				for(int i = 0; i < sb.length(); i++) {
 					if (i % 2 == 0 && i != 0) {
@@ -93,13 +95,14 @@ public class HashTable {
 				}
 				keyIntegerValue = Integer.parseInt("00" + sb.toString());
 
-				int h =
+				//int h =
 			}
 
 		}
 		if (hashFunc.equals("mid_square")) {
 			//do this
 		}
+		return keyIntegerValue;
 	}
 
 	/**
@@ -123,7 +126,10 @@ public class HashTable {
 		 */
 		LibraryFileReader theFile = new LibraryFileReader(filename);
 		ArrayList<String[]> entries = theFile.readFile();
-		return entries.size();
+//		for(int i = 0; i < entries.size(); i++) {
+//			System.out.println(Arrays.toString(entries.get(i)));
+//		}
+		return entries.size() - 1;
 	}
 
 	/**
@@ -139,26 +145,43 @@ public class HashTable {
 	 *         if the entry already exists in the Hash-Table
 	 */
 	public boolean insert(Entry insertEntry) {
-		
-		if (loadFactor >= 0.75) {
+		// if the load factor reaches 75% we rehash the table with more capacity
+		if (loadFactor >= 0.75f) {
 			rehash();
 		} else {
+			// Insertion with linear probing collision resolution
 			if (colRes.equals("linear_probing")) {
-				// DO this type of insertion
-				int probeSequence = 0;
+				// counter for the probe sequence
+				int i = 0;
+				// stores the hash value + probe counter
+				int probeSequence = hashFunction(insertEntry.getKey()) + i;
 				do {
-					int j = hashFunction(insertEntry.getKey()) ;
-					if (entriesArray[j + probeSequence].getKey() == null) {
-						entriesArray[j + probeSequence] = insertEntry;
+
+					// if the key is empty at this index, store it, increment filled slots variable and return true
+					if (entriesArray[probeSequence].getKey() == null) {
+						entriesArray[probeSequence] = insertEntry;
 						filledSlots++;
 						return true;
-					} else probeSequence++;
+					} else {
+						// increment probe counter
+						i++;
+						// if probeSequence reaches end of hash table, circle to the beginning
+						if (probeSequence == initialCapacity) {
+							probeSequence = 0;
+							if (probeSequence == hashFunction(insertEntry.getKey())) {
+								System.out.print("No Space left to insert entry");
+								return false;
+							}
+						}
+					}
 				} while (probeSequence < initialCapacity);
 			}
+			// Insertion with quadratic probing collision resolution
 			if (colRes.equals("quadratic_probing")) {
-				// DO this type of insertion
+				//
 				int probeSequence = 0;
 				do {
+					// quadratic probing hash function
 					int j = (int) (hashFunction(insertEntry.getKey()) - ceil(pow((probeSequence / 2), 2)) * pow((-1), probeSequence)) % initialCapacity;
 					if (j < 0) j = j + initialCapacity;
 					if (entriesArray[j].getKey() == null) {
@@ -201,8 +224,9 @@ public class HashTable {
 	 */
 	public Entry find(String searchKey) {
 		int i = 0;
+		int j = 0;
 		do {
-			int j = hashFunction(searchKey) + probeSequence;
+			j = hashFunction(searchKey) + i;
 			if(entriesArray[j].getKey().compareTo(searchKey) == 0) {
 				return entriesArray[j];
 			}
