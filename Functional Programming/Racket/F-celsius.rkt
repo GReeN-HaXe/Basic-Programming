@@ -6,6 +6,7 @@
 
 ;; Exercise 2.2.1 in the book:
 ;; "HOW TO DESIGN PROGRAMS - An Introduction to Programming and Computing"
+;; by M.Felleisen, R.B.Findler, M.Flatt, S.Krishnamurthi
 
 ;; Demonstrates the use of basic functions and program design
 ;; used in the book to create programs.
@@ -13,7 +14,7 @@
 ;; Fahrenheit->Celsius: number->number
 ;; A function that takes a temperature in Fahrenheit
 ;; and converts it to a temperature in Celsius.
-;; Example: (= (Fahrenheit->Celsius 212) 100)
+;; Example: (= (Fahrenheit->Celsius 212) 99)
 (define (Fahrenheit->Celsius temp)
 ;; Mathematical formula to convert Fahrenheit to Celsius
   (* (- temp 32) k))
@@ -24,7 +25,17 @@
 (check-within (Fahrenheit->Celsius 32) 0 0.01)
 (check-within (Fahrenheit->Celsius 0) -17.6 0.01)
 (check-within (Fahrenheit->Celsius 100) 37.4 0.01)
+(check-within (Fahrenheit->Celsius 212) 99 0.01)
 
 ;; function in the convert.rkt teach pack that allows a user
-;; to test a function in a graphical user interface
+;; to test the function in a graphical user interface
 (convert-gui Fahrenheit->Celsius)
+
+;; function in the convert.rkt teach pack that allows a user to
+;; test the function with an interactions window
+;;(convert-repl Fahrenheit->Celsius)
+
+;; function in the convert.rkt teach pack that allows a user to
+;; read values from a file and output the results of the function
+;; in another file in "C:\Users\username\" folder
+;;(convert-file "input.dat" Fahrenheit->Celsius "output.dat") 
