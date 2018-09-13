@@ -6,6 +6,7 @@
 
 ;; Exercise 2.3.3 + 3.1.1/2 in the book:
 ;; "HOW TO DESIGN PROGRAMS - An Introduction to Programming and Computing"
+;; by M.Felleisen, R.B.Findler, M.Flatt, S.Krishnamurthi
 
 ;; This exercise is about basic extraction of data from a textual
 ;; described problem, interdepencies in data and auxiliary helping
@@ -95,7 +96,7 @@
 ;; Calculates the number of attendes in a show according to the defined
 ;; price. The lowest abstraction point of the exercises.
 ;; Example: (= (attendees 4.90) 135)
-(define (attendees price) (+ (* (- 5.00 price) 150) 120))
+(define (attendees price) (+ (* (- 5.00 price) prop) 120))
 
 ;; Tests
 (check-expect (attendees 4.90) 135)
@@ -103,3 +104,7 @@
 (check-expect (attendees 4.00) 270)
 (check-expect (attendees 3.00) 420)
 
+;; Porportion ratio Variable: prop
+;; Defines the porportion ratio to be used in the attendees calculation
+;; for every drop of a dime(0.10$) in the price, 15 more attendees come
+(define prop (/ 15 0.1))
