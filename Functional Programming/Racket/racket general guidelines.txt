@@ -1,0 +1,36 @@
+Designing Programs(pg 16)
+ - Understanding the Program's Purpose:
+	Understand what the problem does;
+	Relations between input/output;
+	Write a contract, header and purpose statements
+ - Program examples:
+	Help gain better understanding;
+	Avoid some logical errors;
+ - The body:
+	We must first understand the problem;
+	translation of word problems into code;
+ - Testing:
+	Ensure the program computes the expected output;
+	Can reveal most errror types(syntax, runtime, logical);
+ - Domain Knowledge:
+	Knowledge about the domain of the problem(biology, mathematics, chemistry, etc);
+	Helps develop the program body.
+
+Auxiliary Functions(pg 25):
+ - Help Divide and conquer big problems and ensure a better single point of control
+	Formulate auxiliary function definitions for every dependency between quantities
+	mentioned in the problem statement or discovered with example calculations.
+
+Variable Definitions(pg 27)
+ - Give a better single point of control
+	Give names to frequently used constants and use the names instead of the constants
+	in the program
+
+Tests(pg 36)
+ - Test using claims(conditionals) for comparing results with expected values
+
+Data Analysis and Definition(pg 41)
+ - Understand different situations/conditions in the problem statement
+	Demands change in design strategie;
+	Examples should include all situations and borderline(boundaries) cases;
+	Function body a condition with as many lines as existing situations;
