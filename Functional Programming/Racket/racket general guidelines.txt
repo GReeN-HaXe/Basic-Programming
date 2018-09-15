@@ -1,3 +1,30 @@
+1.1 Evaluation Model
+
+	Evaluation is a simplification of expressions
+		Ex: (+ 1 1) -> 2
+	An expression that can't be further simplified
+	is a value.
+
+1.1.1 Sub-expression Evaluation and Continuations
+
+	Nested expressions require more than one simplification.
+	The sintax of an expression determines in what order to simplify the expression.
+	An expression that is not a value can be divided in 2 parts:
+		The REDEX: the part that was modified in a simplification
+		The CONTINUATION: The context in which the REDEX is enveloped,
+				  it tells the redex whats next after simplification
+			Example: (- 4 (+ 1 1)) -> (- 4 2) -> 2
+				REDEX: (+ 1 1)
+				CONTINUATION: (- 4 [])
+	Dynamic extent: Sequence of evaluationg steps of an expression.
+
+1.1.2 Tail position
+
+	An expression is in TAil position whenever it can be used as the return value of
+	its continuation.
+
+********************************************************************************************
+
 Designing Programs(pg 16)
  - Understanding the Program's Purpose:
 	Understand what the problem does;
@@ -34,3 +61,23 @@ Data Analysis and Definition(pg 41)
 	Demands change in design strategie;
 	Examples should include all situations and borderline(boundaries) cases;
 	Function body a condition with as many lines as existing situations;
+
+Symbolic information(pg 49)
+ - Prioritize focus on input for template, output answers can be postponed;
+ - Symbols are atomic
+ - Strings are compound
+
+Compound Data, Part 1: Structures(pg 51)
+ - Inputs of functions can be more than a single measurement or symbol
+ - Compound data combines several pieces of data into one piece
+ - Structures have the same status as a number, they can be input or output, created with "(make-astructure ...)"
+	Example: (make-posn 5 3) creates a point structure with x=5 and y=3
+ - In the contract they are described as primitive data
+	Example: ;; distance-to-0: posn -> number
+ - "(astructure-field aconcretestructure)" is used to extract values from the structure and can be used as a value
+	Example: (posn-x (make-posn 5 3)) or (posn-x aposn) extracts the x coordinate,
+		 the first from a newly created structure and the second from the posn called "aposn"
+
+QUESTION: cAN WE INFER PROPERTIES ANY PROPERTIES OF A GIVEN STRUCTURE, OR CAN WE KNOW HOW IT BEHAVES JUST FROM KNOWING SOME PROPERTIES?
+		- Different types of data structures have passing properties which give them some advantages\disadvantages over others,
+		  making some more suitable than others, depending on the data type
