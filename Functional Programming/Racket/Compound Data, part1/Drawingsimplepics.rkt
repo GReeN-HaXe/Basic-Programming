@@ -4,7 +4,7 @@
 ;; Author: Rúben Costa
 ;; rubencosta@live.com
 
-;; Exercise 6.2.1/2/3/4/5 in the book "HOW TO DESIGN PROGRAMS - An
+;; Exercise 6.2.1/2/3/4 in the book "HOW TO DESIGN PROGRAMS - An
 ;; Introduction to Programming and Computing" by M.Felleisen, R.B.Findler,
 ;; M.Flatt, S.Krishnamurthi.
 
@@ -83,3 +83,66 @@
 
 ;; Tests
 (check-expect (clear-bulb 'red) true)
+
+;; Exercise 6.2.3: Develop a function draw-bulb. It consumes a symbol that
+;; denotes one of the possible colors: 'green, 'yellow, 'red, and produces
+;; true. Its effect is "to turn on" the matching bulb in the traffic light.
+
+;; draw-bulb: symbol -> boolean
+;; to turn on a bulb of a given color.
+;; Example: (draw-bulb 'green) returns true and draws a green disk
+(define (draw-bulb acolor)
+  (cond
+    [(symbol=? acolor 'red) (and (clear-circle
+                                  (make-posn X-COOR RED-Y-COOR) BULB-RADIUS
+                                  'red)
+                                 (draw-solid-disk
+                                  (make-posn X-COOR RED-Y-COOR) BULB-RADIUS
+                                  'red))]
+    [(symbol=? acolor 'yellow) (and (clear-circle
+                                  (make-posn X-COOR YELLOW-Y-COOR)
+                                  BULB-RADIUS
+                                  'yellow)
+                                 (draw-solid-disk
+                                  (make-posn X-COOR YELLOW-Y-COOR)
+                                  BULB-RADIUS
+                                  'yellow))]
+    [(symbol=? acolor 'green) (and (clear-circle
+                                  (make-posn X-COOR GREEN-Y-COOR)
+                                  BULB-RADIUS
+                                  'green)
+                                 (draw-solid-disk
+                                  (make-posn X-COOR GREEN-Y-COOR)
+                                  BULB-RADIUS
+                                  'green))]))
+
+;; Tests
+(check-expect (draw-bulb 'green) true)
+
+;; Exercise 6.2.4: Develop the function switch. It consumes two symbols,
+;; each of which stands for a traffic light color, and produces true. Its
+;; effects are to clear the bulb for the first color and then to draw the
+;; second bulb.
+
+;; switch: symbol symbol -> boolean
+;; to clear the bulb with the first color and draw a disk with the second
+;; color.
+;; Example: (switch 'green 'yellow) turns off green and on yellow
+(define (switch coloroff coloron)
+  (cond
+   [(and (symbol=? coloroff 'red) (symbol=? coloron 'yellow))
+    (and (clear-bulb 'red) (draw-bulb 'yellow))]
+   [(and (symbol=? coloroff 'red) (symbol=? coloron 'green))
+    (and (clear-bulb 'red) (draw-bulb 'green))]
+   [(and (symbol=? coloroff 'yellow) (symbol=? coloron 'red))
+    (and (clear-bulb 'yellow) (draw-bulb 'red))]
+   [(and (symbol=? coloroff 'yellow) (symbol=? coloron 'green))
+    (and (clear-bulb 'yellow) (draw-bulb 'green))]
+   [(and (symbol=? coloroff 'green) (symbol=? coloron 'yellow))
+    (and (clear-bulb 'green) (draw-bulb 'yellow))]
+   [else (and (clear-bulb 'green) (draw-bulb 'red))]))
+
+;; Test
+(check-expect (switch 'green 'yellow) true)
+(check-expect (switch 'yellow 'red) true)
+(check-expect (switch 'red 'green) true)
