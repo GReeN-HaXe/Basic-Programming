@@ -77,6 +77,7 @@ Compound Data, Part 1: Structures(pg 51)
  - "(astructure-field aconcretestructure)" is used to extract values from the structure and can be used as a value
 	Example: (posn-x (make-posn 5 3)) or (posn-x aposn) extracts the x coordinate,
 		 the first from a newly created structure and the second from the posn called "aposn"
+ - Join two expressions for a combined output with boolean "and".
 
 QUESTION: cAN WE INFER PROPERTIES ANY PROPERTIES OF A GIVEN STRUCTURE, OR CAN WE KNOW HOW IT BEHAVES JUST FROM KNOWING SOME PROPERTIES?
 		- Different types of data structures have passing properties which give them some advantages\disadvantages over others,
