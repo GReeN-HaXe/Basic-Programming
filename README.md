@@ -1,6 +1,6 @@
 # Basic.Programming
 
-My name is Rúben, i’m learning Computer Science.
+My name is Rúben, i’m learning Programming.
 I made this repository to store my solutions on some simple exercises
 done while learning basic programming concepts.
 
